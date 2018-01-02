@@ -65,16 +65,16 @@ const scorePanel = document.querySelector('.moves');
 const starsList = document.querySelector('.stars');
 const scoreStars = '<li><i class="fa fa-star"></i></li>';
 
-// Displays the card's symbol
+// Displays the card
 function showCard(event, target) {
   scorePanelIncrease();
-  addCardToOpenList(event.target);
+  addCardToOpenList((event.target));
   event.target.classList.toggle('open');
   event.target.classList.toggle('show');
-  event.target.classList
 }
 
 // Increases stars and moves counter
+// TODO - update stars counter from 3 to 2 to 1 based on time/moves
 function scorePanelIncrease() {
   attemptCounter++;
   scorePanel.textContent = attemptCounter;
@@ -85,7 +85,7 @@ function scorePanelIncrease() {
 let openCardsList = [];
 function addCardToOpenList(openCard) {
   openCardsList.push(openCard);
-    //  console.log(openCardsList);
+  console.log(openCardsList);
     if(openCardsList.length > 1 && openCardsList[0] === openCardsList[1]) {
       openCardsList[0].classList.add('match');
       openCardsList[1].classList.add('match');
