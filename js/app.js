@@ -1,6 +1,5 @@
 // TODO:
 // star counter based on moves
-// add timer
 // add reset button to clear board
 // add reset button to "win" modal
 // disable clicking on already-matched cards
@@ -77,7 +76,7 @@ createCards();
  */
 
 // Variable to hold number of turns
-let attemptCounter = '';
+let attemptCounter = 0;
 
 // Variables for updating score panel
   // Variable for number of moves
@@ -114,6 +113,9 @@ function showCard(event, target) {
         matchingLogic();
       }
 }
+
+
+
 
 // Disables click (will call on already-matched cards)
 function turnOffClick() {
@@ -162,3 +164,22 @@ function youWon() {
   $('#winModal').modal('open');
   $('#timeToWin').append(`It took you ${totalSeconds} seconds to win.`);
 }
+
+// Restart timer
+function restartGame() {
+  totalSeconds = 0;
+  numberOfWins = 0;
+  attemptCounter = 0;
+  scorePanel.textContent = attemptCounter;
+  $('.card').remove();
+  createCards();
+}
+
+// Restart timer and close modal
+function restartGameModal() {
+  restartGame();
+  $('#winModal').modal('close');
+}
+
+$('.restart').click(restartGame);
+$('.restart-modal').click(restartGameModal);
