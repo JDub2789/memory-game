@@ -1,17 +1,14 @@
 // TODO:
-// star counter based on moves
-// add reset button to clear board
-// add reset button to "win" modal
 // disable clicking on already-matched cards
-// remove modal button at bottom
+// diable clicking on non-<li> elements
 
+// Timer
 var timerVar = setInterval(countTimer, 1000);
 var totalSeconds = 0;
 function countTimer() {
    ++totalSeconds;
    var minute = Math.floor(totalSeconds/60);
    var seconds = totalSeconds - minute*60;
-
    document.getElementById("timer").innerHTML = minute + ":" + seconds;
 }
 
@@ -39,7 +36,6 @@ function createCardHTML(card) {
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
     var currentIndex = array.length, temporaryValue, randomIndex;
-
     while (currentIndex !== 0) {
         randomIndex = Math.floor(Math.random() * currentIndex);
         currentIndex -= 1;
@@ -83,16 +79,32 @@ let attemptCounter = 0;
 const scorePanel = document.querySelector('.moves');
   // Variable for ranking (number of stars)
 const starsList = document.querySelector('.stars');
-  // Variable for one star
-const scoreStars = '<li><i class="fa fa-star"></i></li>';
+const modalStarsList = document.querySelector('.modalStars');
+// Variables for stars
+const threeStars = '<li><i class="fa fa-star"><i class="fa fa-star"><i class="fa fa-star"></i></li>';
+const twoStars = '<li><i class="fa fa-star"><i class="fa fa-star"></i></li>';
+const oneStar = '<li><i class="fa fa-star"></i></li>';
 
 // Function to increase moves counter
-// TODO - update stars counter from 3 to 2 to 1 based on time/moves
 function scorePanelIncrease() {
   attemptCounter++;
   scorePanel.textContent = attemptCounter;
-  // starsList.insertAdjacentHTML('beforeend', scoreStars);
 }
+
+// Function for stars score
+function decreaseScore() {
+  if (attemptCounter <= 8) {
+    starsList.innerHTML = threeStars;
+    modalStarsList.innerHTML = threeStars;
+  } else if (attemptCounter > 8 && attemptCounter < 15 ) {
+    starsList.innerHTML = twoStars;
+    modalStarsList.innerHTML = twoStars;
+  } else if (attemptCounter > 0){
+    starsList.innerHTML = oneStar;
+    modalStarsList.innerHTML = oneStar;
+  }
+}
+
 
 let openCardsList = [];
 // Function to display the card (when clicked)
@@ -106,6 +118,7 @@ function showCard(event, target) {
         // turnOffClick();
       } else if (openCardsList.length === 1) {
         scorePanelIncrease();
+        decreaseScore();
         (event.target).classList.toggle("show");
         (event.target).classList.toggle("open");
         (event.target).classList.toggle("flipInY");
@@ -172,12 +185,14 @@ function restartGame() {
   attemptCounter = 0;
   scorePanel.textContent = attemptCounter;
   $('.card').remove();
+  cardsListTimesTwo = [];
   createCards();
 }
 
 // Restart timer and close modal
 function restartGameModal() {
   restartGame();
+  timerVar = setInterval(countTimer, 1000);
   $('#winModal').modal('close');
 }
 
