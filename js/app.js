@@ -16,7 +16,7 @@ const deckList = $(".deck");
 
 // Function to create HTML for card, using ${card} variable to subsitute class name from cardsList array
 function createCardHTML(card) {
-    deckList.append(`<li class="card show"><i class="fa ${card}"></i></li>`);
+    deckList.append(`<li class="card animated"><i class="fa ${card}"></i></li>`);
 }
 
 // Shuffle function from http://stackoverflow.com/a/2450976
@@ -82,16 +82,19 @@ let openCardsList = [];
 function showCard(event, target) {
     // function below not working
       if (openCardsList.length === 0) {
+        (event.target).classList.toggle("flipInY");
         (event.target).classList.toggle("open");
         (event.target).classList.toggle("show");
+
         console.log(openCardsList);
         openCardsList.push(event.target);
         // turnOffClick();
         console.log(openCardsList);
       } else if (openCardsList.length === 1) {
         scorePanelIncrease();
-        (event.target).classList.toggle("open");
         (event.target).classList.toggle("show");
+        (event.target).classList.toggle("open");
+        (event.target).classList.toggle("flipInY");
         openCardsList.push(event.target);
         console.log(openCardsList);
         matchingLogic();
@@ -112,15 +115,21 @@ function matchingLogic() {
         openCardsList.pop();
       }
   } else {
+    setTimeout( function wrongMatch() {
     openCardsList[0].classList.toggle('open');
     openCardsList[0].classList.toggle('show');
     openCardsList[1].classList.toggle('open');
     openCardsList[1].classList.toggle('show');
+    // need to delay
+    // setTimeout(wrongMatch(), 1000);
       for (i = 0; i < 2; i++) {
         openCardsList.pop();
       }
-  }
+    }, 1000);
 }
+}
+
+
 
 // Event Listener to activate showCard function when card is clicked
 // remove line below
