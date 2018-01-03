@@ -85,28 +85,27 @@ function showCard(event, target) {
         (event.target).classList.toggle("flipInY");
         (event.target).classList.toggle("open");
         (event.target).classList.toggle("show");
-
-        console.log(openCardsList);
         openCardsList.push(event.target);
         // turnOffClick();
-        console.log(openCardsList);
       } else if (openCardsList.length === 1) {
         scorePanelIncrease();
         (event.target).classList.toggle("show");
         (event.target).classList.toggle("open");
         (event.target).classList.toggle("flipInY");
         openCardsList.push(event.target);
-        console.log(openCardsList);
         matchingLogic();
       }
 }
 
+// Disables click (will call on already-matched cards)
+// TODO this doesn't work
 function turnOffClick() {
   openCardsList.forEach(function(clickedCard) {
     clickedCard.removeEventListener('click', showCard);
   });
 }
 
+// Function to determine if cards match
 function matchingLogic() {
   if (openCardsList[0].firstChild.className === openCardsList[1].firstChild.className) {
     openCardsList[0].classList.add('match');
@@ -115,6 +114,7 @@ function matchingLogic() {
         openCardsList.pop();
       }
   } else {
+    // setTimeout delays the flip so users can see wrong match
     setTimeout( function wrongMatch() {
     openCardsList[0].classList.toggle('open');
     openCardsList[0].classList.toggle('show');
