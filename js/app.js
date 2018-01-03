@@ -1,30 +1,23 @@
-// Store class for each card's i element in variable
-// const diamond = '<li class="card show"><i class="fa fa-diamond"></i></li>';
-// const diamond2 = '<li class="card show"><i class="fa fa-diamond"></i></li>';
-// const plane = '<li class="card"><i class="fa fa-paper-plane"></i></li>';
-// const plane2 = '<li class="card"><i class="fa fa-paper-plane"></i></li>';
-// const anchor = '<li class="card"><i class="fa fa-anchor"></i></li>';
-// const anchor2 = '<li class="card"><i class="fa fa-anchor"></i></li>';
-// const bolt = '<li class="card"><i class="fa fa-bolt"></i></li>';
-// const bolt2 = '<li class="card"><i class="fa fa-bolt"></i></li>';
-// const cube = '<li class="card"><i class="fa fa-cube"></i></li>';
-// const cube2 = '<li class="card"><i class="fa fa-cube"></i></li>';
-// const leaf = '<li class="card"><i class="fa fa-leaf"></i></li>';
-// const leaf2 = '<li class="card"><i class="fa fa-leaf"></i></li>';
-// const bicycle = '<li class="card"><i class="fa fa-bicycle"></i></li>';
-// const bicycle2 = '<li class="card"><i class="fa fa-bicycle"></i></li>';
-// const bomb = '<li class="card"><i class="fa fa-bomb"></i></li>';
-// const bomb2 = '<li class="card"><i class="fa fa-bomb"></i></li>';
-
-// Variable to hold cards' classes
-var cardsList = ["fa-diamond", "fa-paper-plane-o", "fa-anchor", "fa-bolt", "fa-cube", "fa-leaf", "fa-bicycle", "fa-bomb"];
-
 // Variable for number of matches (8 = win), starts at 0
 let numberOfWins = 0;
 
-// Function to create HTML for card, using ${card} variable
+/*
+ * Display the cards on the page
+ *   - shuffle the list of cards using the provided "shuffle" method below
+ *   - loop through each card and create its HTML
+ *   - add each card's HTML to the page
+ */
+
+// Variable to hold cards' class names
+var cardsList = ["fa-diamond", "fa-paper-plane-o", "fa-anchor", "fa-bolt", "fa-cube", "fa-leaf", "fa-bicycle", "fa-bomb"];
+
+// Variable for <ul> that holds list of cards
+const deckList = $(".deck");
+console.log(deckList);
+
+// Function to create HTML for card, using ${card} variable to subsitute class name from cardsList array
 function createCardHTML(card) {
-    $("#deck").append(`<li class="card animated show"><i class="fa ${card}"></i></li>`);
+    deckList.append(`<li class="card"><i class="fa ${card}"></i></li>`);
 }
 
 // Shuffle function from http://stackoverflow.com/a/2450976
@@ -43,6 +36,7 @@ function shuffle(array) {
 }
 
 // Makes cards and appends each item to .deck <ul> and calls function
+// the .forEach pulls each item from cardsList array and passes that value to the createCardHTML function
 function createCards() {
     for (var i = 0; i < 2; i++) {
         cardsList = shuffle(cardsList);
@@ -50,15 +44,6 @@ function createCards() {
     }
 }
 createCards();
-
-
-
-/*
- * Display the cards on the page
- *   - shuffle the list of cards using the provided "shuffle" method below
- *   - loop through each card and create its HTML
- *   - add each card's HTML to the page
- */
 
 /*
  * set up the event listener for a card. If a card is clicked:
@@ -71,25 +56,36 @@ createCards();
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
 
+// Variable to hold number of turns
 let attemptCounter = '';
+
+// Variables for updating score panel
+  // Variable for number of moves
 const scorePanel = document.querySelector('.moves');
+  // Variable for ranking (number of stars)
 const starsList = document.querySelector('.stars');
+  // Variable for one star
 const scoreStars = '<li><i class="fa fa-star"></i></li>';
 
-// Displays the card
-function showCard(event, target) {
-  addCardToOpenList(event.target);
-  event.target.classList.toggle('open');
-  event.target.classList.toggle('show');
-}
-
-// Increases stars and moves counter
+// Function to increase moves counter
 // TODO - update stars counter from 3 to 2 to 1 based on time/moves
 function scorePanelIncrease() {
   attemptCounter++;
   scorePanel.textContent = attemptCounter;
   // starsList.insertAdjacentHTML('beforeend', scoreStars);
 }
+
+// Function to display the card (when clicked)
+function showCard(event, target) {
+  addCardToOpenList(event.target);
+  event.target.classList.toggle('open');
+  event.target.classList.toggle('show');
+}
+
+// Event Listener to activate showCard function when card is clicked
+var theDeckList = document.getElementsByClassName('deck');
+console.log(theDeckList);
+theDeckList.addEventListener('click', showCard);
 
 // Adds the card to "open" list
 let openCardsList = [];
@@ -115,5 +111,3 @@ function addCardToOpenList(openCard) {
       }
     }
 }
-
-// deckList.addEventListener('click', showCard);
