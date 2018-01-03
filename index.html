@@ -8,6 +8,10 @@
     <link rel="stylesheet prefetch" href="https://fonts.googleapis.com/css?family=Coda">
     <link rel="stylesheet" href="css/app.css">
     <link rel="stylesheet" href="css/animate.css">
+
+    <!-- Compiled and minified CSS -->
+  <link rel="stylesheet" href="css/materialize.css">
+
 </head>
 <body>
 
@@ -26,14 +30,34 @@
             <div class="restart">
         		<i class="fa fa-repeat"></i>
         	</div>
+          <p>Timer: </p>
+          <span>
+            <div id="timer">
+              <label id="minutes">00</label>:<label id="seconds">00</label>
+            </div>
+          </span>
         </section>
 
         <ul class="deck">
 
         </ul>
     </div>
+  <a class="waves-effect waves-light btn modal-trigger" href="#winModal">Modal</a>
+    <!-- Winner modal -->
+    <div id="winModal" class="modal">
+      <div class="modal-content">
+        <h4>You won!!</h4>
+        <p id="timeToWin"></p>
+        <p>Want to play again?</p>
+        <div class="restart">
+          <i class="fa fa-repeat"></i>
+        </div>
+      </div>
+    </div>
 
     <script src="js/jquery-3.2.1.js"></script>
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
     <script src="js/app.js"></script>
 
 </body>

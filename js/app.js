@@ -1,3 +1,21 @@
+// TODO:
+// star counter based on moves
+// add timer
+// add reset button to clear board
+// add reset button to "win" modal
+// disable clicking on already-matched cards
+// remove modal button at bottom
+
+var timerVar = setInterval(countTimer, 1000);
+var totalSeconds = 0;
+function countTimer() {
+   ++totalSeconds;
+   var minute = Math.floor(totalSeconds/60);
+   var seconds = totalSeconds - minute*60;
+
+   document.getElementById("timer").innerHTML = minute + ":" + seconds;
+}
+
 // Variable for number of matches (8 = win), starts at 0
 let numberOfWins = 0;
 
@@ -16,7 +34,7 @@ const deckList = $(".deck");
 
 // Function to create HTML for card, using ${card} variable to subsitute class name from cardsList array
 function createCardHTML(card) {
-    deckList.append(`<li class="card animated"><i class="fa ${card}"></i></li>`);
+    deckList.append(`<li class="card show animated"><i class="fa ${card}"></i></li>`);
 }
 
 // Shuffle function from http://stackoverflow.com/a/2450976
@@ -98,7 +116,6 @@ function showCard(event, target) {
 }
 
 // Disables click (will call on already-matched cards)
-// TODO this doesn't work
 function turnOffClick() {
   openCardsList.forEach(function(clickedCard) {
     clickedCard.removeEventListener('click', showCard);
@@ -110,71 +127,38 @@ function matchingLogic() {
   if (openCardsList[0].firstChild.className === openCardsList[1].firstChild.className) {
     openCardsList[0].classList.add('match');
     openCardsList[1].classList.add('match');
+    numberOfWins++;
+    console.log(numberOfWins);
+    if (numberOfWins === 8) {
+      youWon();
+      clearInterval(timerVar);
+    }
       for (i = 0; i < 2; i++) {
         openCardsList.pop();
       }
   } else {
     // setTimeout delays the flip so users can see wrong match
     setTimeout( function wrongMatch() {
-    openCardsList[0].classList.toggle('open');
-    openCardsList[0].classList.toggle('show');
-    openCardsList[1].classList.toggle('open');
-    openCardsList[1].classList.toggle('show');
-    // need to delay
-    // setTimeout(wrongMatch(), 1000);
-      for (i = 0; i < 2; i++) {
-        openCardsList.pop();
-      }
-    }, 1000);
+      openCardsList[0].classList.toggle('open');
+      openCardsList[0].classList.toggle('show');
+      openCardsList[1].classList.toggle('open');
+      openCardsList[1].classList.toggle('show');
+        for (i = 0; i < 2; i++) {
+          openCardsList.pop();
+        }
+      }, 1500);
+    }
 }
-}
-
-
 
 // Event Listener to activate showCard function when card is clicked
-// remove line below
-// var deckList = document.querySelector('.deck');
 deckList.click(showCard);
 
-// Variable to hold list of open cards
-// let openCardsList = [];
-// function addCardToOpenList(clickedCard) {
-//   if (openCardsList.length === 0) {
-//     (clickedCard).toggleClass("open");
-//     console.log(openCardsList);
-//     openCardsList.push(clickedCard);
-//     console.log(openCardsList);
-//
-//   }
-// }
+$(document).ready(function(){
+  $('#winModal').modal();
+});
 
-
-
-
-
-// NOT WORKING
-
-// Adds the card to "open" list
-
-// function addCardToOpenList(openCard) {
-//   openCardsList.push($(this));
-//     if(openCardsList.length > 1 && (openCardsList[0] === openCardsList[1])) {
-//       scorePanelIncrease();
-//       openCardsList[0].classList.add('match');
-//       openCardsList[1].classList.add('match');
-//       console.log('openCardsList');
-//       openCardsList.pop();
-//       openCardsList.pop();
-//       console.log('match popped:' + openCardsList);
-//       event.target.removeEventListener();
-//       numberOfWins++;
-//     } else if (openCardsList.length == 2) {
-//       console.log(openCardsList.length);
-//       scorePanelIncrease();
-//       for (i = 0; i <= 2; i++) {  // this loop won't work with "i != 2" or "i <= 1"
-//         openCardsList[i].classList.remove('open');
-//         openCardsList[i].classList.remove('show');
-//         openCardsList.pop();
-//       }
-//     }
-// }
+// Function to display modal on win
+function youWon() {
+  $('#winModal').modal('open');
+  $('#timeToWin').append(`It took you ${totalSeconds} seconds to win.`);
+}
