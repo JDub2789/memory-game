@@ -1,8 +1,6 @@
 // TODO:
-// disable clicking on already-matched cards
 // diable clicking on non-<li> elements
 // remove "show" from class list on initial deck build
-// add eventListenter to each card (rather than the ul)
 // make timer start on game start, rather than page load
 // check responsiveness
 
@@ -59,9 +57,8 @@ function createCards() {
   for (const card of cardsList) {
     cardsListTimesTwo.push(card);
     cardsListTimesTwo.push(card);
-  } console.log(cardsListTimesTwo);
+  }
   shuffle(cardsListTimesTwo);
-  console.log(cardsListTimesTwo);
   // add for loop here, using i to add id to each card
   for (i = 0; i <= cardsListTimesTwo.length - 1; i++) {
     deckList.append(`<li id="card-${i}" class="card show animated"><i class="fa ${cardsListTimesTwo[i]}"></i></li>`);
@@ -159,7 +156,6 @@ function matchingLogic() {
     openCardsList[1].classList.add('match');
 
     numberOfWins++;
-    console.log(numberOfWins);
     if (numberOfWins === 8) {
       youWon();
       clearInterval(timerVar);
@@ -183,7 +179,12 @@ function matchingLogic() {
 }
 
 // Event Listener to activate showCard function when card is clicked
-deckList.click(showCard);
+var cardObjects = document.getElementsByClassName('card');
+for (const cardObject of cardObjects) {
+  cardObject.addEventListener('click', showCard);
+}
+
+// click(showCard);
 
 $(document).ready(function(){
   $('#winModal').modal();
