@@ -36,7 +36,10 @@ const deckList = $(".deck");
 
 // Function to create HTML for card, using ${card} variable to subsitute class name from cardsList array
 function createCardHTML(card) {
-    deckList.append(`<li class="card show animated"><i class="fa ${card}"></i></li>`);
+  // for (i = 1; i <= cardsListTimesTwo.length; i++) {
+  //   deckList.append(`<li id="card-${i}" class="card show animated"><i class="fa ${card}"></i></li>`);
+  // }
+    // deckList.append(`<li class="card show animated"><i class="fa ${card}"></i></li>`);
 }
 
 // Shuffle function from http://stackoverflow.com/a/2450976
@@ -60,9 +63,14 @@ function createCards() {
   for (const card of cardsList) {
     cardsListTimesTwo.push(card);
     cardsListTimesTwo.push(card);
-  }
+  } console.log(cardsListTimesTwo);
   shuffle(cardsListTimesTwo);
-  cardsListTimesTwo.forEach(createCardHTML);
+  console.log(cardsListTimesTwo);
+  // add for loop here, using i to add id to each card
+  for (i = 1; i <= cardsListTimesTwo.length; i++) {
+    deckList.append(`<li id="card-${i}" class="card show animated"><i class="fa ${cardsListTimesTwo[i]}"></i></li>`);
+  }
+  // cardsListTimesTwo.forEach(createCardHTML);
 }
 createCards();
 
