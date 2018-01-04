@@ -1,8 +1,14 @@
 // TODO:
 // disable clicking on already-matched cards
 // diable clicking on non-<li> elements
+// remove "show" from class list on initial deck build
+// add id-(i) for each card
+// add eventListenter to each card (rather than the ul)
+// make timer start on game start, rather than page load
+// check responsiveness
 
 // Timer
+// from https://stackoverflow.com/questions/5517597/plain-count-up-timer-in-javascript, submitted by Yusuf
 var timerVar = setInterval(countTimer, 1000);
 var totalSeconds = 0;
 function countTimer() {
