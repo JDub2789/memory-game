@@ -1,13 +1,12 @@
 // TODO:
-// diable clicking on non-<li> elements
 // remove "show" from class list on initial deck build
 // make timer start on game start, rather than page load
 // check responsiveness
 
-// Timer
-// from https://stackoverflow.com/questions/5517597/plain-count-up-timer-in-javascript, submitted by Yusuf
-var timerVar = setInterval(countTimer, 1000);
+// Variable to hold timer - defined here for global scope
+var timerVar;
 var totalSeconds = 0;
+var gameStart = false;
 function countTimer() {
    ++totalSeconds;
    var minute = Math.floor(totalSeconds/60);
@@ -115,19 +114,20 @@ function decreaseScore() {
 let openCardsList = [];
 // Function to display the card (when clicked)
 function showCard(event, target) {
+  if (gameStart === false) {
+    gameStart = true;
+    if (gameStart == true) {
+      // Timer
+      // from https://stackoverflow.com/questions/5517597/plain-count-up-timer-in-javascript, submitted by Yusuf
+      timerVar = setInterval(countTimer, 1000);
+      countTimer();
+    }
+  }
       if (openCardsList.length === 0) {
         (event.target).classList.toggle("flipInY");
         (event.target).classList.toggle("open");
         (event.target).classList.toggle("show");
         openCardsList.push(event.target);
-
-        // Trying to disable click
-        // (event.target).off('click');
-        // const clickedCardId = "\'#" + event.target.id + "\'";
-        // const clickedCardId = "\'" + event.target.id + "\'";
-        // const clickedCardId = event.target.id;
-        // console.log(clickedCardId);
-        // document.getElementById(clickedCardId).removeEventListener('click', showCard());
       } else if (openCardsList.length === 1) {
         scorePanelIncrease();
         decreaseScore();
@@ -141,21 +141,16 @@ function showCard(event, target) {
 
 
 
-
-// Disables click (will call on already-matched cards)
-function turnOffClick() {
-  openCardsList.forEach(function(clickedCard) {
-    clickedCard.click('off');
-  });
-}
-
 // Function to determine if cards match
 function matchingLogic() {
   if (openCardsList[0].firstChild.className === openCardsList[1].firstChild.className && openCardsList[0].id != openCardsList[1].id) {
     openCardsList[0].classList.add('match');
     openCardsList[1].classList.add('match');
-
     numberOfWins++;
+    let matchedCards = document.getElementsByClassName('match');
+    for (const matchedCard of matchedCards) {
+      matchedCard.removeEventListener('click', showCard);
+    }
     if (numberOfWins === 8) {
       youWon();
       clearInterval(timerVar);
@@ -180,11 +175,11 @@ function matchingLogic() {
 
 // Event Listener to activate showCard function when card is clicked
 var cardObjects = document.getElementsByClassName('card');
-for (const cardObject of cardObjects) {
+function makeDeckClickable() {
+  for (const cardObject of cardObjects) {
   cardObject.addEventListener('click', showCard);
-}
-
-// click(showCard);
+} }
+makeDeckClickable();
 
 $(document).ready(function(){
   $('#winModal').modal();
@@ -201,10 +196,13 @@ function restartGame() {
   totalSeconds = 0;
   numberOfWins = 0;
   attemptCounter = 0;
+  gameStart = false;
+  timerVar = '';
   scorePanel.textContent = attemptCounter;
   $('.card').remove();
   cardsListTimesTwo = [];
   createCards();
+  makeDeckClickable();
 }
 
 // Restart timer and close modal
