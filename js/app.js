@@ -1,18 +1,14 @@
 // TODO:
 // remove "show" from class list on initial deck build
-// make timer start on game start, rather than page load
+// make timer restart to 0 on clicking restart button
 // check responsiveness
 
-// Variable to hold timer - defined here for global scope
-var timerVar;
-var totalSeconds = 0;
-var gameStart = false;
-function countTimer() {
-   ++totalSeconds;
-   var minute = Math.floor(totalSeconds/60);
-   var seconds = totalSeconds - minute*60;
-   document.getElementById("timer").innerHTML = minute + ":" + seconds;
-}
+// Easy timer by Albert Gonzalez - https://albert-gonzalez.github.io/easytimer.js/
+var timer = new Timer();
+gameStart = false;
+timer.addEventListener('secondsUpdated', function (e) {
+    $('#timer').html(timer.getTimeValues().toString());
+});
 
 // Variable for number of matches (8 = win), starts at 0
 let numberOfWins = 0;
@@ -60,21 +56,10 @@ function createCards() {
   shuffle(cardsListTimesTwo);
   // add for loop here, using i to add id to each card
   for (i = 0; i <= cardsListTimesTwo.length - 1; i++) {
-    deckList.append(`<li id="card-${i}" class="card show animated"><i class="fa ${cardsListTimesTwo[i]}"></i></li>`);
+    deckList.append(`<li id="card-${i}" class="card animated"><i class="fa ${cardsListTimesTwo[i]}"></i></li>`);
   }
 }
 createCards();
-
-/*
- * set up the event listener for a card. If a card is clicked:
- *  - display the card's symbol (put this functionality in another function that you call from this one)
- *  - add the card to a *list* of "open" cards (put this functionality in another function that you call from this one)
- *  - if the list already has another card, check to see if the two cards match
- *    + if the cards do match, lock the cards in the open position (put this functionality in another function that you call from this one)
- *    + if the cards do not match, remove the cards from the list and hide the card's symbol (put this functionality in another function that you call from this one)
- *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
- *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
- */
 
 // Variable to hold number of turns
 let attemptCounter = 0;
@@ -110,19 +95,13 @@ function decreaseScore() {
   }
 }
 
-
 let openCardsList = [];
 // Function to display the card (when clicked)
 function showCard(event, target) {
   if (gameStart === false) {
     gameStart = true;
-    if (gameStart == true) {
-      // Timer
-      // from https://stackoverflow.com/questions/5517597/plain-count-up-timer-in-javascript, submitted by Yusuf
-      timerVar = setInterval(countTimer, 1000);
-      countTimer();
-    }
-  }
+    timer.start(); }
+
       if (openCardsList.length === 0) {
         (event.target).classList.toggle("flipInY");
         (event.target).classList.toggle("open");
@@ -138,8 +117,6 @@ function showCard(event, target) {
         matchingLogic();
       }
 }
-
-
 
 // Function to determine if cards match
 function matchingLogic() {
@@ -181,6 +158,7 @@ function makeDeckClickable() {
 } }
 makeDeckClickable();
 
+// Creates modal object (not visible)
 $(document).ready(function(){
   $('#winModal').modal();
 });
@@ -191,13 +169,15 @@ function youWon() {
   $('#timeToWin').append(`It took you ${totalSeconds} seconds to win.`);
 }
 
-// Restart timer
+// Function to restart game
 function restartGame() {
   totalSeconds = 0;
   numberOfWins = 0;
   attemptCounter = 0;
   gameStart = false;
-  timerVar = '';
+  timer.stop();
+  console.log(gameStart);
+  $('#timer').html("00:00");
   scorePanel.textContent = attemptCounter;
   $('.card').remove();
   cardsListTimesTwo = [];
@@ -205,10 +185,9 @@ function restartGame() {
   makeDeckClickable();
 }
 
-// Restart timer and close modal
+// Function for restart button inside modal
 function restartGameModal() {
   restartGame();
-  timerVar = setInterval(countTimer, 1000);
   $('#winModal').modal('close');
 }
 
