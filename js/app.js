@@ -2,7 +2,6 @@
 // disable clicking on already-matched cards
 // diable clicking on non-<li> elements
 // remove "show" from class list on initial deck build
-// add id-(i) for each card
 // add eventListenter to each card (rather than the ul)
 // make timer start on game start, rather than page load
 // check responsiveness
@@ -36,10 +35,7 @@ const deckList = $(".deck");
 
 // Function to create HTML for card, using ${card} variable to subsitute class name from cardsList array
 function createCardHTML(card) {
-  // for (i = 1; i <= cardsListTimesTwo.length; i++) {
-  //   deckList.append(`<li id="card-${i}" class="card show animated"><i class="fa ${card}"></i></li>`);
-  // }
-    // deckList.append(`<li class="card show animated"><i class="fa ${card}"></i></li>`);
+
 }
 
 // Shuffle function from http://stackoverflow.com/a/2450976
@@ -67,10 +63,9 @@ function createCards() {
   shuffle(cardsListTimesTwo);
   console.log(cardsListTimesTwo);
   // add for loop here, using i to add id to each card
-  for (i = 1; i <= cardsListTimesTwo.length; i++) {
+  for (i = 0; i <= cardsListTimesTwo.length - 1; i++) {
     deckList.append(`<li id="card-${i}" class="card show animated"><i class="fa ${cardsListTimesTwo[i]}"></i></li>`);
   }
-  // cardsListTimesTwo.forEach(createCardHTML);
 }
 createCards();
 
@@ -123,13 +118,19 @@ function decreaseScore() {
 let openCardsList = [];
 // Function to display the card (when clicked)
 function showCard(event, target) {
-    // function below not working
       if (openCardsList.length === 0) {
         (event.target).classList.toggle("flipInY");
         (event.target).classList.toggle("open");
         (event.target).classList.toggle("show");
         openCardsList.push(event.target);
-        // turnOffClick();
+
+        // Trying to disable click
+        // (event.target).off('click');
+        // const clickedCardId = "\'#" + event.target.id + "\'";
+        // const clickedCardId = "\'" + event.target.id + "\'";
+        // const clickedCardId = event.target.id;
+        // console.log(clickedCardId);
+        // document.getElementById(clickedCardId).removeEventListener('click', showCard());
       } else if (openCardsList.length === 1) {
         scorePanelIncrease();
         decreaseScore();
@@ -147,15 +148,16 @@ function showCard(event, target) {
 // Disables click (will call on already-matched cards)
 function turnOffClick() {
   openCardsList.forEach(function(clickedCard) {
-    clickedCard.removeEventListener('click', showCard);
+    clickedCard.click('off');
   });
 }
 
 // Function to determine if cards match
 function matchingLogic() {
-  if (openCardsList[0].firstChild.className === openCardsList[1].firstChild.className) {
+  if (openCardsList[0].firstChild.className === openCardsList[1].firstChild.className && openCardsList[0].id != openCardsList[1].id) {
     openCardsList[0].classList.add('match');
     openCardsList[1].classList.add('match');
+
     numberOfWins++;
     console.log(numberOfWins);
     if (numberOfWins === 8) {
@@ -165,6 +167,7 @@ function matchingLogic() {
       for (i = 0; i < 2; i++) {
         openCardsList.pop();
       }
+
   } else {
     // setTimeout delays the flip so users can see wrong match
     setTimeout( function wrongMatch() {
