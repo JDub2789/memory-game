@@ -1,8 +1,3 @@
-// TODO:
-// remove "show" from class list on initial deck build
-// make timer restart to 0 on clicking restart button
-// check responsiveness
-
 // Easy timer by Albert Gonzalez - https://albert-gonzalez.github.io/easytimer.js/
 var timer = new Timer();
 gameStart = false;
@@ -41,7 +36,6 @@ function shuffle(array) {
         array[currentIndex] = array[randomIndex];
         array[randomIndex] = temporaryValue;
     }
-
     return array;
 }
 
@@ -56,7 +50,7 @@ function createCards() {
   shuffle(cardsListTimesTwo);
   // add for loop here, using i to add id to each card
   for (i = 0; i <= cardsListTimesTwo.length - 1; i++) {
-    deckList.append(`<li id="card-${i}" class="card animated"><i class="fa ${cardsListTimesTwo[i]}"></i></li>`);
+    deckList.append(`<li id="card-${i}" class="card show animated"><i class="fa ${cardsListTimesTwo[i]}"></i></li>`);
   }
 }
 createCards();
@@ -89,7 +83,7 @@ function decreaseScore() {
   } else if (attemptCounter > 8 && attemptCounter < 15 ) {
     starsList.innerHTML = twoStars;
     modalStarsList.innerHTML = twoStars;
-  } else if (attemptCounter > 0){
+  } else if (attemptCounter > 15){
     starsList.innerHTML = oneStar;
     modalStarsList.innerHTML = oneStar;
   }
@@ -101,12 +95,15 @@ function showCard(event, target) {
   if (gameStart === false) {
     gameStart = true;
     timer.start(); }
-
       if (openCardsList.length === 0) {
         (event.target).classList.toggle("flipInY");
         (event.target).classList.toggle("open");
         (event.target).classList.toggle("show");
         openCardsList.push(event.target);
+        const openedCard = document.getElementsByClassName('open');
+        for (i=0; i<1; i++) {
+          openedCard[i].removeEventListener('click', showCard);
+        }
       } else if (openCardsList.length === 1) {
         scorePanelIncrease();
         decreaseScore();
@@ -130,7 +127,6 @@ function matchingLogic() {
     }
     if (numberOfWins === 8) {
       youWon();
-      clearInterval(timerVar);
     }
       for (i = 0; i < 2; i++) {
         openCardsList.pop();
@@ -143,6 +139,8 @@ function matchingLogic() {
       openCardsList[0].classList.toggle('show');
       openCardsList[1].classList.toggle('open');
       openCardsList[1].classList.toggle('show');
+      openCardsList[0].addEventListener('click', showCard);
+      openCardsList[1].addEventListener('click', showCard);
         for (i = 0; i < 2; i++) {
           openCardsList.pop();
         }
@@ -166,12 +164,12 @@ $(document).ready(function(){
 // Function to display modal on win
 function youWon() {
   $('#winModal').modal('open');
-  $('#timeToWin').append(`It took you ${totalSeconds} seconds to win.`);
+  // $('#timeToWin').append(`It took you ${totalSeconds} seconds to win.`);
+  $('#timeToWin').html(timer.getTimeValues().seconds);
 }
 
 // Function to restart game
 function restartGame() {
-  totalSeconds = 0;
   numberOfWins = 0;
   attemptCounter = 0;
   gameStart = false;
