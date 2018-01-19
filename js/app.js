@@ -50,7 +50,7 @@ function createCards() {
   shuffle(cardsListTimesTwo);
   // add for loop here, using i to add id to each card
   for (i = 0; i <= cardsListTimesTwo.length - 1; i++) {
-    deckList.append(`<li id="card-${i}" class="card show animated"><i class="fa ${cardsListTimesTwo[i]}"></i></li>`);
+    deckList.append(`<li id="card-${i}" class="card animated"><i class="fa ${cardsListTimesTwo[i]}"></i></li>`);
   }
 }
 createCards();
